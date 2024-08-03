@@ -2094,6 +2094,7 @@ function lvl () {
         tiles.placeOnRandomTile(mySprite, assets.tile`start`)
         mySprite.vx = 25
         mySprite.setFlag(SpriteFlag.Invisible, true)
+        music.play(music.createSong(assets.song`The Acidic Assault - acid plains`), music.PlaybackMode.LoopingInBackground)
     } else {
         level = 3
     }
@@ -3780,7 +3781,7 @@ function start () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     if (blockMenu.isMenuOpen()) {
         if (option == checkforworld1()) {
-            level = blockSettings.readNumber("lvl1")
+            level = 3
             file1 = true
             start()
         } else {
