@@ -12,6 +12,7 @@ namespace SpriteKind {
     export const boss = SpriteKind.create()
     export const invincible = SpriteKind.create()
     export const camera = SpriteKind.create()
+    export const centercamera = SpriteKind.create()
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.boss, function (sprite, otherSprite) {
     if (sprite.vy > 0) {
@@ -273,7 +274,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.boss, function (sprite, otherSpr
         )
         music.play(music.createSoundEffect(WaveShape.Noise, 742, 744, 197, 0, 278, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
     } else {
-        info.setLife(0)
+        death()
     }
 })
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -906,7 +907,7 @@ scene.onOverlapTile(SpriteKind.lava, assets.tile`lavasurface`, function (sprite,
     })
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile6`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 sprites.onOverlap(SpriteKind.lava, SpriteKind.risinglava, function (sprite, otherSprite) {
     sprite.ay = 0
@@ -1196,7 +1197,7 @@ scene.onOverlapTile(SpriteKind.wave, assets.tile`crackedblock`, function (sprite
     })
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile24`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (canjump) {
@@ -1511,7 +1512,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`lavafilledblock`, function (s
     })
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 controller.down.onEvent(ControllerButtonEvent.Released, function () {
     if (gamestarted) {
@@ -1610,13 +1611,13 @@ controller.down.onEvent(ControllerButtonEvent.Released, function () {
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.lava, function (sprite, otherSprite) {
-    info.setLife(0)
+    death()
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.risinglava, function (sprite, otherSprite) {
-    info.setLife(0)
+    death()
 })
 scene.onOverlapTile(SpriteKind.wave, assets.tile`myTile2`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 function Boss () {
     destroy()
@@ -1754,8 +1755,75 @@ function Boss () {
     hitbox.ay = 500
     hitbox.vx = 100
 }
+function death () {
+    hitbox.setKind(SpriteKind.dead)
+    info.changeLifeBy(-1)
+    controller.moveSprite(hitbox, 0, 0)
+    hitbox.vy = -250
+    hitbox.setFlag(SpriteFlag.GhostThroughWalls, true)
+    mySprite = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.centercamera)
+    mySprite.setPosition(hitbox.x, hitbox.y)
+    scene.cameraFollowSprite(mySprite)
+    animation.runImageAnimation(
+    Jumpy,
+    [img`
+        . . . . . . . 2 . . . . . . . . 
+        . . . . . . 2 2 2 . . . . . . . 
+        . . . . . . 2 2 2 . . . . . . . 
+        . . . . . 2 2 2 2 2 . . . . . . 
+        . . . . 2 2 2 2 2 2 2 . . . . . 
+        . . . . 2 2 2 2 2 2 2 2 2 . . . 
+        . . . 2 f f f f f f f f 2 . . . 
+        . . . 2 1 1 1 f f 1 1 1 2 2 . . 
+        . . . 2 1 f 1 f f 1 f 1 2 2 . . 
+        . . . 2 1 1 1 f f 1 1 1 2 2 . . 
+        . . 2 2 f f f f f f f f 2 2 . . 
+        . . 2 2 f f f 1 1 f f f 2 2 . . 
+        . . 2 2 f f f 1 1 f f f 2 2 . . 
+        . . 2 2 f f f f f f f f 2 2 . . 
+        . . 2 2 2 2 2 2 2 2 2 2 2 . . . 
+        . . . . . 2 2 2 2 2 . . . . . . 
+        `],
+    500,
+    true
+    )
+    music.stopAllSounds()
+    timer.after(30, function () {
+        music.play(music.createSoundEffect(WaveShape.Noise, 2257, 1494, 255, 0, 500, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
+        timer.after(500, function () {
+            music.play(music.createSong(assets.song`death`), music.PlaybackMode.UntilDone)
+            if (info.life() == 0) {
+                gameover()
+            } else {
+                loss = 5 - info.life() - (5 - info.life()) * 2
+                sprites.destroyAllSpritesOfKind(SpriteKind.Player)
+                sprites.destroyAllSpritesOfKind(SpriteKind.jumpy)
+                destroy()
+                start()
+                info.changeLifeBy(loss)
+            }
+        })
+    })
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile25`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     if (gamestarted) {
@@ -2154,7 +2222,7 @@ function lvl () {
     hitbox.ay = 500
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile3`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 scene.onOverlapTile(SpriteKind.lavaproducer, assets.tile`lavasurface`, function (sprite, location) {
     sprites.destroy(sprite)
@@ -2166,7 +2234,7 @@ scene.onOverlapTile(SpriteKind.lavaproducer, assets.tile`transparency16`, functi
     tiles.setTileAt(location, assets.tile`lava`)
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile29`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 function checkforworld2 () {
     if (blockSettings.readNumber("lvl2") > -1 && blockSettings.readNumber("lvl2") < 3) {
@@ -2180,7 +2248,7 @@ function checkforworld2 () {
     }
 }
 scene.onOverlapTile(SpriteKind.wave, assets.tile`myTile3`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 spriteutils.createRenderable(0, function (screen2) {
     if (!(gamestarted)) {
@@ -2199,7 +2267,7 @@ spriteutils.createRenderable(0, function (screen2) {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile21`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile16`, function (sprite, location) {
     spriteutils.jumpImpulse(sprite, 96)
@@ -2456,7 +2524,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Projectile, function (sprite, otherSprite) {
-    info.setLife(0)
+    death()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile17`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`transparency16`)
@@ -2976,7 +3044,7 @@ function checkforworld1 () {
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`lavasurface`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     if (gamestarted) {
@@ -3075,10 +3143,10 @@ controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile2`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile5`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 function relicroom () {
     destroy()
@@ -3167,41 +3235,7 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
     game.reset()
 })
 info.onLifeZero(function () {
-    hitbox.setKind(SpriteKind.dead)
-    animation.runImageAnimation(
-    Jumpy,
-    [img`
-        . . . . . . . 2 . . . . . . . . 
-        . . . . . . 2 2 2 . . . . . . . 
-        . . . . . . 2 2 2 . . . . . . . 
-        . . . . . 2 2 2 2 2 . . . . . . 
-        . . . . 2 2 2 2 2 2 2 . . . . . 
-        . . . . 2 2 2 2 2 2 2 2 2 . . . 
-        . . . 2 f f f f f f f f 2 . . . 
-        . . . 2 1 1 1 f f 1 1 1 2 2 . . 
-        . . . 2 1 f 1 f f 1 f 1 2 2 . . 
-        . . . 2 1 1 1 f f 1 1 1 2 2 . . 
-        . . 2 2 f f f f f f f f 2 2 . . 
-        . . 2 2 f f f 1 1 f f f 2 2 . . 
-        . . 2 2 f f f 1 1 f f f 2 2 . . 
-        . . 2 2 f f f f f f f f 2 2 . . 
-        . . 2 2 2 2 2 2 2 2 2 2 2 . . . 
-        . . . . . 2 2 2 2 2 . . . . . . 
-        `],
-    500,
-    true
-    )
-    music.stopAllSounds()
-    timer.after(30, function () {
-        music.play(music.createSoundEffect(WaveShape.Noise, 2257, 1494, 255, 0, 500, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-        timer.after(500, function () {
-            music.play(music.createSong(assets.song`death`), music.PlaybackMode.UntilDone)
-            sprites.destroyAllSpritesOfKind(SpriteKind.Player)
-            sprites.destroyAllSpritesOfKind(SpriteKind.jumpy)
-            destroy()
-            start()
-        })
-    })
+	
 })
 function bossattack1 () {
     for (let mySprite of sprites.allOfKind(SpriteKind.boss)) {
@@ -3619,6 +3653,7 @@ function destroy () {
     sprites.destroyAllSpritesOfKind(SpriteKind.risinglava)
     sprites.destroyAllSpritesOfKind(SpriteKind.boss)
     sprites.destroyAllSpritesOfKind(SpriteKind.Projectile)
+    sprites.destroyAllSpritesOfKind(SpriteKind.centercamera)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile10`, function (sprite, location) {
     tiles.setTileAt(location, assets.tile`transparency16`)
@@ -3628,10 +3663,36 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile10`, function (sprite, 
     })
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile27`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 function start () {
     gamestarted = true
+    profilelife.setMaxLife(5)
+    info.setLife(5)
+    profilelife.setFilledLifeImage(img`
+        . . . . . . . . . . 
+        . f f f f f f f f . 
+        . f 5 5 5 5 5 5 f . 
+        . f 5 f 4 4 f 5 f . 
+        . f 5 4 2 2 4 5 f . 
+        . f 5 4 2 2 4 5 f . 
+        . f 5 f f 4 4 5 f . 
+        . f 5 5 5 5 5 5 f . 
+        . f f f f f f f f . 
+        . . . . . . . . . . 
+        `)
+    profilelife.setEmptyLifeImage(img`
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        . . . . . . . . . . 
+        `)
     bosshp = 1
     sprites.destroy(select)
     scene.setBackgroundImage(img`
@@ -3808,13 +3869,26 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile11`, function (sprite, 
     lvl()
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile30`, function (sprite, location) {
-    info.setLife(0)
+    death()
+})
+scene.onHitWall(SpriteKind.dead, function (sprite, location) {
+    if (sprite.isHittingTile(CollisionDirection.Bottom)) {
+        canjump = false
+    }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile26`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
+function gameover () {
+    music.stopAllSounds()
+    music.play(music.createSong(assets.song`GAM3 0V3R`), music.PlaybackMode.UntilDone)
+    timer.background(function () {
+        game.splash("GAME OVER...")
+    })
+    game.reset()
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile28`, function (sprite, location) {
-    info.setLife(0)
+    death()
 })
 let lava: Sprite = null
 let file3 = false
@@ -3822,6 +3896,7 @@ let file2 = false
 let file1 = false
 let projectile: Sprite = null
 let checkpoint = false
+let loss = 0
 let level = 0
 let gamestarted = false
 let lavaproducer: Sprite = null
@@ -4127,6 +4202,9 @@ game.onUpdate(function () {
 game.onUpdate(function () {
     for (let value of sprites.allOfKind(SpriteKind.camera)) {
         scene.centerCameraAt(value.x, hitbox.y)
+    }
+    for (let value of sprites.allOfKind(SpriteKind.centercamera)) {
+        scene.centerCameraAt(value.x, value.y)
     }
 })
 game.onUpdate(function () {

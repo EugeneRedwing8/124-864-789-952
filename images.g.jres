@@ -74,6 +74,12 @@
         "displayName": "The Acidic Assault - acid plains",
         "namespace": "mySongs."
     },
+    "song8": {
+        "data": "0078000408080102001c000c960064006d019001000478002c010000640032000000000a06000524000000200001242000400001224000800001208000a000011da000c000011bc0000001011d",
+        "mimeType": "application/mkcd-song",
+        "displayName": "GAM3 0V3R",
+        "namespace": "mySongs."
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

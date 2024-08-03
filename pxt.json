@@ -10,7 +10,8 @@
         "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
         "arcade-sprite-util": "github:jwunderl/arcade-sprite-util#v0.4.1",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
-        "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.2.0"
+        "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.2.0",
+        "arcade-premium-life": "github:jwunderl/arcade-premium-life#v0.2.1"
     },
     "files": [
         "main.blocks",
