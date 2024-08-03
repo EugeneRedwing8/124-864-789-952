@@ -1,5 +1,6 @@
 {
     "name": "Java Lava Jump v1.9",
+    "version": "1.0.0",
     "description": "",
     "dependencies": {
         "device": "*",
