@@ -4026,7 +4026,7 @@ function start () {
 blockMenu.onMenuOptionSelected(function (option, index) {
     if (blockMenu.isMenuOpen()) {
         if (option == checkforworld1()) {
-            level = 3
+            level = blockSettings.readNumber("lvl1")
             file1 = true
             start()
         } else {
