@@ -6,10 +6,9 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Java Lava Jump</title>
-    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/EugeneRedwing8/chicken-io-sprite-free-lag-free/chicken.io/favicon.ico" width="32" height="32">
+    <title>{{ site.github.project_title }}</title>
     <meta name="description" content="{{ site.github.project_tagline }}" />
-    <meta name="author" content="Broken Gaming">
+    <meta name="author" content="{{ site.github.owner_name }}">
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="/" />
     <meta name="twitter:title" content="{{ site.github.project_tagline }}" />
@@ -33,8 +32,8 @@
     <script type="text/javascript" src="./assets/js/custom.js?v={{ site.github.build_revision }}"></script>
     <style>
         body {
-            background: navy;
-            color: #3305ff;
+            background: black;
+            color: white;
             font-family: monospace;
             overflow: hidden;
             font-size: 14pt;
@@ -58,7 +57,7 @@
         }
 
         footer {
-            color: #3305ff;
+            color: grey;
             position: absolute;
             bottom: 0;
             width: 100%;
@@ -70,12 +69,12 @@
         }
 
         footer a {
-            color: #3305ff;
+            color: grey;
         }
 
         .embed footer,
         .embed footer a {
-            color: #3305ff;
+            color: black;
         }
 
         #fullscreen {
@@ -99,7 +98,7 @@
 
         .lds-ripple div {
             position: absolute;
-            border: 4px solid #3305ff;
+            border: 4px solid #fff;
             opacity: 1;
             border-radius: 50%;
             animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -156,21 +155,11 @@
         sandbox="allow-popups allow-forms allow-scripts allow-same-origin">
     </iframe>
     <footer id="footer">
-        <a target="blank" rel="nofollow noopener" href="https://eugeneredwing8.github.io/brokengaming.github.io">
-        <button style=background-color:blue;border-color:#0095ff>Broken Gaming Homepage</button>
-        </a>
-        <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}">
-        <button style=background-color:blue;border-color:#0095ff>Manual</button>
-        </a>
-        <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">
-        <button style=background-color:blue;border-color:#0095ff>Edit</button>
-        </a>
-        <a target="blank" rel="nofollow noopener" href="https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}">
-        <button style=background-color:blue;border-color:#0095ff>GitHub</button>
-        </a>
-        <div id="fullscreen">
-            <button style=background-color:blue;border-color>⛶</button>
-        </div>
+        <a target="blank" rel="nofollow noopener" href="https://{{ site.github.owner_name }}.github.io/{{ site.github.repository_name }}/README">Manual</a>
+        <a target="blank" rel="nofollow noopener" href="https://arcade.makecode.com/#pub:github:{{ site.github.owner_name }}/{{ site.github.repository_name }}">Edit</a>
+        <a target="blank" rel="nofollow noopener" href="https://github.com/{{ site.github.owner_name }}/{{ site.github.repository_name }}">GitHub</a>
+        <span id="version"></span>
+        <div id="fullscreen">⇲</div>
     </footer>
     <script type="text/javascript">
         makeCodeRun({ js: "./assets/js/binary.js?v={{ site.github.build_revision }}" });
